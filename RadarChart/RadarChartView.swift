@@ -21,6 +21,7 @@ final class RadarChartView: UIView {
     
     override func draw(_ rect: CGRect) {
         var radian: Double = 0
+        var points: [CGPoint] = []
         
         // 레벨 설정
         let step = 5
@@ -94,9 +95,14 @@ final class RadarChartView: UIView {
             strValue.draw(in: textRect, withAttributes: attributes)
             
             // 실제 데이터 반영
+            // 각 포인트에 점으로 강조
             if let value = dataList.first(where: { $0.type == type })?.value {
+                
                 let convValue = heightMaxValue * (CGFloat(value) / 100) // 전달된 값을 차트크기에 맞게 변환(높이대비)
                 let point = transformRotate(radian: radian, x: x, y: rect.midY - convValue, cx: cx, cy: cy)
+                
+                points.append(point)
+                
                 if valuePath.isEmpty {
                     valuePath.move(to: point)
                 } else {
@@ -147,6 +153,22 @@ final class RadarChartView: UIView {
         UIColor.strokePink.setStroke()
         valuePath.lineWidth = 2
         valuePath.stroke()
+        
+        // 다각형 포인터 설정
+        // 포인트에 값을 찍을 UIBezierPath
+        for point in points {
+            let pointPath = UIBezierPath()
+            pointPath.addArc(
+                withCenter: point,
+                radius: 3, // 반지름
+                startAngle: 0, // 0도
+                endAngle: .pi * 2, // 360도
+                clockwise: true // 시계방향 유무
+            )
+            UIColor.red.setFill()
+            pointPath.fill()
+        }
+               
     }
     
     // 점(x, y)를 특정 좌표(cx, cy)를 중심으로 radian만큼 회전시킨 점의 좌표를 반환
