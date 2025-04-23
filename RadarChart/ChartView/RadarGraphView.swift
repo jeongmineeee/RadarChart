@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class RadarChartView: UIView {
+final class RadarGraphView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: .zero)
@@ -30,6 +30,9 @@ final class RadarChartView: UIView {
             stepLinePaths.append(CustomUIBezierPath())
         }
         
+        //  꼭지점과 중앙을 연결하는 패스
+        var connectLinePaths = [UIBezierPath]()
+        
         // 최대로 그려질 높이 설정
         // 1단계에 해당하는 높이 설정
         let heightMaxValue = rect.height / 2 * 0.7
@@ -50,13 +53,13 @@ final class RadarChartView: UIView {
             // 차트 중심으로부터 각 특성 다각형 꼭지점까지의 직선
             UIColor.lightGray.setStroke()
             let path = UIBezierPath()
-            path.lineWidth = 1
+            path.lineWidth = 0.8
             path.move(to: CGPoint(x: cx, y: cy))
             path.addLine(to: transformRotate(radian: radian, x: x, y: y, cx: cx, cy: cy))
-            path.stroke()
+            connectLinePaths.append(path)
             
             let partialPath = UIBezierPath()
-            partialPath.lineWidth = 1.5
+            partialPath.lineWidth = 0.8
             partialPath.move(to: CGPoint(x: cx, y: cy))
             partialPath.addLine(to: transformRotate(radian: radian, x: x, y: y, cx: cx, cy: cy))
             partialPath.stroke()
@@ -116,6 +119,20 @@ final class RadarChartView: UIView {
         
         // 단계별 가이드 라인이 실질적으로 그려짐
         stepLinePaths.enumerated().forEach { index, path in
+            print(index, path)
+            switch index {
+            case 2...4:
+                UIColor.fillGreen.setFill()
+            case 1:
+                UIColor.fillBlue.setFill()
+            case 0:
+                UIColor.fillOrange.setFill()
+            default:
+                UIColor.gray.withAlphaComponent(0.2).setFill()
+            }
+            path.fill()
+            
+            // 가이드 선 작성
             UIColor.lightGray.setStroke()
             path.close()
             path.stroke()
@@ -145,13 +162,19 @@ final class RadarChartView: UIView {
         }
         
         // 다각형 배경색 설정
-        UIColor.fillPink.setFill()
-        valuePath.close()
-        valuePath.fill()
+//        UIColor.fillPink.withAlphaComponent(0.5).setFill()
+//        valuePath.close()
+//        valuePath.fill()
+        
+        UIColor.lightGray.setStroke()
+        connectLinePaths.forEach { path in
+            path.stroke()
+        }
         
         // 다각형 테두리 설정
-        UIColor.strokePink.setStroke()
+        UIColor.black.setStroke()
         valuePath.lineWidth = 2
+        valuePath.close()
         valuePath.stroke()
         
         // 다각형 포인터 설정
@@ -165,7 +188,7 @@ final class RadarChartView: UIView {
                 endAngle: .pi * 2, // 360도
                 clockwise: true // 시계방향 유무
             )
-            UIColor.red.setFill()
+            UIColor.black.setFill()
             pointPath.fill()
         }
                

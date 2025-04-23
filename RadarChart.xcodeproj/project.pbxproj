@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		A313FFDC2DB776DE0023F0A8 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = A313FFDB2DB776DE0023F0A8 /* SnapKit */; };
+		A3C70E1A2DB870E300F684E8 /* DGCharts in Frameworks */ = {isa = PBXBuildFile; productRef = A3C70E192DB870E300F684E8 /* DGCharts */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +70,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A3C70E1A2DB870E300F684E8 /* DGCharts in Frameworks */,
 				A313FFDC2DB776DE0023F0A8 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -131,6 +133,7 @@
 			name = RadarChart;
 			packageProductDependencies = (
 				A313FFDB2DB776DE0023F0A8 /* SnapKit */,
+				A3C70E192DB870E300F684E8 /* DGCharts */,
 			);
 			productName = RadarChart;
 			productReference = A313FFA62DB776C80023F0A8 /* RadarChart.app */;
@@ -216,6 +219,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				A313FFDA2DB776DE0023F0A8 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				A3C70E182DB870E300F684E8 /* XCRemoteSwiftPackageReference "Charts" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A313FFA72DB776C80023F0A8 /* Products */;
@@ -580,6 +584,14 @@
 				minimumVersion = 5.7.1;
 			};
 		};
+		A3C70E182DB870E300F684E8 /* XCRemoteSwiftPackageReference "Charts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ChartsOrg/Charts.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -587,6 +599,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A313FFDA2DB776DE0023F0A8 /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
+		};
+		A3C70E192DB870E300F684E8 /* DGCharts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A3C70E182DB870E300F684E8 /* XCRemoteSwiftPackageReference "Charts" */;
+			productName = DGCharts;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
