@@ -11,6 +11,7 @@ import DGCharts
 
 final class ViewController: UIViewController {
     private let radarChartView = RadarChartView()
+    private let basicRadarChartView = RadarChartView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,16 +19,26 @@ final class ViewController: UIViewController {
         configureHierarchy()
         configureLayout()
         configureView()
-        setChartData()
+        
+        // 차트 데이터 세팅
+        setChartData() // 근육질 차트
+        setBasicChartData() // 근육양 차트
     }
     
     private func configureHierarchy() {
         view.addSubview(radarChartView)
+        view.addSubview(basicRadarChartView)
     }
     
     private func configureLayout() {
         radarChartView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
+            make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+            make.height.equalTo(250)
+        }
+        
+        basicRadarChartView.snp.makeConstraints { make in
+            make.top.equalTo(radarChartView.snp.bottom).offset(10)
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
             make.height.equalTo(250)
         }
@@ -42,8 +53,20 @@ final class ViewController: UIViewController {
         radarChartView.webAlpha = 1
         radarChartView.rotationEnabled = false
         radarChartView.legend.enabled = false
+        
+        basicRadarChartView.chartDescription.enabled = false
+        basicRadarChartView.webLineWidth = 1
+        basicRadarChartView.innerWebLineWidth = 1
+        basicRadarChartView.webColor = .lightGray
+        basicRadarChartView.innerWebColor = .lightGray
+        basicRadarChartView.webAlpha = 1
+        basicRadarChartView.rotationEnabled = false
+        basicRadarChartView.legend.enabled = false
     }
-    
+  
+}
+
+extension ViewController {
     private func setChartData() {
         // 차트에 사용할 실 데이터
         let muscles = MuscleType.allCases.map { $0.name }
@@ -98,5 +121,73 @@ final class ViewController: UIViewController {
         radarChartView.yAxis.axisMaximum = 100
         radarChartView.yAxis.labelCount = 5
         radarChartView.yAxis.drawLabelsEnabled = false // Y축 값(20, 40, 60) 등은 표시하지 않음
+    }
+    
+    private func setBasicChartData() {
+        let muscles = MuscleType.allCases.map { $0.rawValue }
+       
+        // 전면부 데이터
+        let frontEntries = frontQuantityList.map { RadarChartDataEntry(value: $0.value) }
+        let frontDataSet = RadarChartDataSet(entries: frontEntries, label: "근육양(전면)")
+        frontDataSet.colors = [.strokePink]
+        frontDataSet.fillColor = .fillPink
+        frontDataSet.fillAlpha = 0.7
+        frontDataSet.lineWidth = 1
+        frontDataSet.drawFilledEnabled = true
+        frontDataSet.drawValuesEnabled = false
+        
+        frontDataSet.drawHighlightCircleEnabled = true
+        frontDataSet.setDrawHighlightIndicators(false)
+        frontDataSet.highlightCircleFillColor = .strokePink
+        frontDataSet.highlightCircleStrokeColor = .strokePink
+        frontDataSet.highlightCircleOuterRadius = 2
+        frontDataSet.highlightCircleInnerRadius = 0
+       
+        // 후면부 데이터
+        let backEntries = backQuantityList.map { RadarChartDataEntry(value: $0.value) }
+        let backDataSet = RadarChartDataSet(entries: backEntries, label: "근육양(후면)")
+        backDataSet.colors = [.fillGreen]
+        backDataSet.fillColor = .fillGreen
+        backDataSet.fillAlpha = 0.3
+        backDataSet.lineWidth = 1
+        backDataSet.drawFilledEnabled = true
+        backDataSet.drawValuesEnabled = false
+        
+        backDataSet.drawHighlightCircleEnabled = true
+        backDataSet.setDrawHighlightIndicators(false)
+        backDataSet.highlightCircleFillColor = .fillGreen
+        backDataSet.highlightCircleStrokeColor = .fillGreen
+        backDataSet.highlightCircleOuterRadius = 2
+        backDataSet.highlightCircleInnerRadius = 0
+        
+        // 데이터 설정
+        let data = RadarChartData(dataSets: [frontDataSet, backDataSet])
+        basicRadarChartView.data = data
+        basicRadarChartView.highlightPerTapEnabled = false
+        basicRadarChartView.isUserInteractionEnabled = false
+        
+        let frontHighlights = frontQuantityList.enumerated().map { index, item in
+            Highlight(x: Double(index), y: item.value, dataSetIndex: 0)
+        }
+        
+        let backHighlights = backQuantityList.enumerated().map { index, item in
+            Highlight(x: Double(index), y: item.value, dataSetIndex: 1)
+        }
+        let highlights = frontHighlights + backHighlights
+        basicRadarChartView.highlightValues(highlights)
+        
+        // X축 설정
+        basicRadarChartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: muscles)
+        basicRadarChartView.xAxis.labelFont = .systemFont(ofSize: 10)
+        basicRadarChartView.xAxis.labelTextColor = .darkGray
+        
+        // Y축 설정
+        basicRadarChartView.yAxis.axisMinimum = 20 // 처음 시작점(0 제외)을 20으로 지정
+        basicRadarChartView.yAxis.axisMaximum = 100
+        basicRadarChartView.yAxis.labelCount = 5
+        basicRadarChartView.yAxis.drawLabelsEnabled = false // Y축 값(20, 40, 60) 등은 표시하지 않음
+        
+        basicRadarChartView.animate(xAxisDuration: 1.4, yAxisDuration: 1.4, easingOption: .easeOutCirc)
+
     }
 }
