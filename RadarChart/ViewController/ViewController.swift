@@ -65,6 +65,7 @@ final class ViewController: UIViewController {
         radarChartView.data = data // 데이터셋을 데이터로 지정
         radarChartView.highlightPerTapEnabled = false // 하이라이트 지점 터치 이벤트 방지
         radarChartView.isUserInteractionEnabled = false // 차트 자체에 대한 인터랙션 방지
+        radarChartView.animate(xAxisDuration: 1.4, yAxisDuration: 1.4, easingOption: .easeOutCirc) // 애니메이션 추가
 
         // 차트에 커스텀 랜더러 설정
         // 데이터 값이나 배경을 그릴 필요가 있어 커스텀 랜더러를 사용함
