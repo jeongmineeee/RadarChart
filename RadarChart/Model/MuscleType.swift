@@ -30,6 +30,16 @@ let dataList: [MuscleData] = [
     MuscleData(type: .이두근, value: 90.2)
 ]
 
+let newDataList: [MuscleData] = [
+    MuscleData(type: .큰가슴근, value: 50.2),
+    MuscleData(type: .심지굴근, value: 70.3),
+    MuscleData(type: .삼각근_앞, value: 40.3),
+    MuscleData(type: .복근, value: 50.5),
+    MuscleData(type: .대퇴근, value: 60.6),
+    MuscleData(type: .이두근, value: 90.2),
+    MuscleData(type: .이두근, value: 100.0)
+]
+
 // 근육양 테스트 데이터
 let frontQuantityList: [MuscleData] = [
     MuscleData(type: .큰가슴근, value: 50.2, side: .front),
@@ -55,7 +65,11 @@ enum Side: String {
     case back
 }
 
-enum MuscleType: String, CaseIterable {
+protocol MuscleName {
+    var name: String { get }
+}
+
+enum MuscleType: String, CaseIterable, MuscleName {
     case 큰가슴근
     case 심지굴근
     case 삼각근_앞
@@ -72,5 +86,3 @@ enum MuscleType: String, CaseIterable {
         }
     }
 }
-
-
